@@ -1,0 +1,231 @@
+﻿namespace JscAxisDemoWinForms
+{
+    partial class Form1
+    {
+        /// <summary>
+        ///  Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        ///  Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        ///  Required method for Designer support - do not modify
+        ///  the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            txbIP = new TextBox();
+            cmdConnect = new Button();
+            txbSend = new TextBox();
+            cmdSend = new Button();
+            txbReceive = new TextBox();
+            cmdDisconnect = new Button();
+            cmdPwc = new Button();
+            lblState = new Label();
+            cmdPowerQuit = new Button();
+            txbGoPosition = new TextBox();
+            cmdGoPosition = new Button();
+            lblPosition = new Label();
+            timTellPosition = new System.Windows.Forms.Timer(components);
+            cmdStopMotion = new Button();
+            cmdGoPositionAsync = new Button();
+            SuspendLayout();
+            // 
+            // txbIP
+            // 
+            txbIP.Location = new Point(12, 12);
+            txbIP.Name = "txbIP";
+            txbIP.Size = new Size(139, 27);
+            txbIP.TabIndex = 0;
+            txbIP.Text = "192.168.32.100";
+            // 
+            // cmdConnect
+            // 
+            cmdConnect.Location = new Point(157, 10);
+            cmdConnect.Name = "cmdConnect";
+            cmdConnect.Size = new Size(130, 29);
+            cmdConnect.TabIndex = 1;
+            cmdConnect.Text = "Connect";
+            cmdConnect.UseVisualStyleBackColor = true;
+            cmdConnect.Click += cmdConnect_Click;
+            // 
+            // txbSend
+            // 
+            txbSend.Location = new Point(12, 45);
+            txbSend.Name = "txbSend";
+            txbSend.Size = new Size(139, 27);
+            txbSend.TabIndex = 2;
+            // 
+            // cmdSend
+            // 
+            cmdSend.Location = new Point(157, 45);
+            cmdSend.Name = "cmdSend";
+            cmdSend.Size = new Size(130, 29);
+            cmdSend.TabIndex = 3;
+            cmdSend.Text = "Send";
+            cmdSend.UseVisualStyleBackColor = true;
+            cmdSend.Click += cmdSend_Click;
+            // 
+            // txbReceive
+            // 
+            txbReceive.Location = new Point(12, 95);
+            txbReceive.Multiline = true;
+            txbReceive.Name = "txbReceive";
+            txbReceive.ScrollBars = ScrollBars.Vertical;
+            txbReceive.Size = new Size(275, 338);
+            txbReceive.TabIndex = 4;
+            // 
+            // cmdDisconnect
+            // 
+            cmdDisconnect.Location = new Point(293, 10);
+            cmdDisconnect.Name = "cmdDisconnect";
+            cmdDisconnect.Size = new Size(130, 29);
+            cmdDisconnect.TabIndex = 5;
+            cmdDisconnect.Text = "Disconnect";
+            cmdDisconnect.UseVisualStyleBackColor = true;
+            cmdDisconnect.Click += cmdDisconnect_Click;
+            // 
+            // cmdPwc
+            // 
+            cmdPwc.Location = new Point(293, 94);
+            cmdPwc.Name = "cmdPwc";
+            cmdPwc.Size = new Size(137, 29);
+            cmdPwc.TabIndex = 6;
+            cmdPwc.Text = "PWC";
+            cmdPwc.UseVisualStyleBackColor = true;
+            cmdPwc.Click += cmdPwc_Click;
+            // 
+            // lblState
+            // 
+            lblState.AutoSize = true;
+            lblState.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblState.Location = new Point(475, 21);
+            lblState.Name = "lblState";
+            lblState.Size = new Size(92, 38);
+            lblState.TabIndex = 7;
+            lblState.Text = "State: ";
+            // 
+            // cmdPowerQuit
+            // 
+            cmdPowerQuit.Location = new Point(436, 94);
+            cmdPowerQuit.Name = "cmdPowerQuit";
+            cmdPowerQuit.Size = new Size(137, 29);
+            cmdPowerQuit.TabIndex = 8;
+            cmdPowerQuit.Text = "PQ";
+            cmdPowerQuit.UseVisualStyleBackColor = true;
+            cmdPowerQuit.Click += cmdPowerQuit_Click;
+            // 
+            // txbGoPosition
+            // 
+            txbGoPosition.Location = new Point(294, 185);
+            txbGoPosition.Name = "txbGoPosition";
+            txbGoPosition.Size = new Size(129, 27);
+            txbGoPosition.TabIndex = 9;
+            txbGoPosition.Text = "0";
+            txbGoPosition.TextAlign = HorizontalAlignment.Right;
+            // 
+            // cmdGoPosition
+            // 
+            cmdGoPosition.Location = new Point(436, 184);
+            cmdGoPosition.Name = "cmdGoPosition";
+            cmdGoPosition.Size = new Size(137, 29);
+            cmdGoPosition.TabIndex = 10;
+            cmdGoPosition.Text = "Go Position";
+            cmdGoPosition.UseVisualStyleBackColor = true;
+            cmdGoPosition.Click += cmdGoPosition_Click;
+            // 
+            // lblPosition
+            // 
+            lblPosition.AutoSize = true;
+            lblPosition.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblPosition.Location = new Point(294, 288);
+            lblPosition.Name = "lblPosition";
+            lblPosition.Size = new Size(129, 38);
+            lblPosition.TabIndex = 11;
+            lblPosition.Text = "Position: ";
+            // 
+            // timTellPosition
+            // 
+            timTellPosition.Enabled = true;
+            timTellPosition.Interval = 2000;
+            timTellPosition.Tick += timTellPosition_Tick;
+            // 
+            // cmdStopMotion
+            // 
+            cmdStopMotion.Location = new Point(293, 129);
+            cmdStopMotion.Name = "cmdStopMotion";
+            cmdStopMotion.Size = new Size(280, 29);
+            cmdStopMotion.TabIndex = 12;
+            cmdStopMotion.Text = "Stop Motion";
+            cmdStopMotion.UseVisualStyleBackColor = true;
+            cmdStopMotion.Click += cmdStopMotion_Click;
+            // 
+            // cmdGoPositionAsync
+            // 
+            cmdGoPositionAsync.Location = new Point(436, 219);
+            cmdGoPositionAsync.Name = "cmdGoPositionAsync";
+            cmdGoPositionAsync.Size = new Size(137, 29);
+            cmdGoPositionAsync.TabIndex = 13;
+            cmdGoPositionAsync.Text = "Go Position Async";
+            cmdGoPositionAsync.UseVisualStyleBackColor = true;
+            cmdGoPositionAsync.Click += cmdGoPositionAsync_Click;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(750, 448);
+            Controls.Add(cmdGoPositionAsync);
+            Controls.Add(cmdStopMotion);
+            Controls.Add(lblPosition);
+            Controls.Add(cmdGoPosition);
+            Controls.Add(txbGoPosition);
+            Controls.Add(cmdPowerQuit);
+            Controls.Add(lblState);
+            Controls.Add(cmdPwc);
+            Controls.Add(cmdDisconnect);
+            Controls.Add(txbReceive);
+            Controls.Add(cmdSend);
+            Controls.Add(txbSend);
+            Controls.Add(cmdConnect);
+            Controls.Add(txbIP);
+            Name = "Form1";
+            Text = "Form1";
+            Load += Form1_Load;
+            ResumeLayout(false);
+            PerformLayout();
+        }
+
+        #endregion
+        private TextBox txbIP;
+        private Button cmdConnect;
+        private TextBox txbSend;
+        private Button cmdSend;
+        private TextBox txbReceive;
+        private Button cmdDisconnect;
+        private Button cmdPwc;
+        private Label lblState;
+        private Button cmdPowerQuit;
+        private TextBox txbGoPosition;
+        private Button cmdGoPosition;
+        private Label lblPosition;
+        private System.Windows.Forms.Timer timTellPosition;
+        private Button cmdStopMotion;
+        private Button cmdGoPositionAsync;
+    }
+}
