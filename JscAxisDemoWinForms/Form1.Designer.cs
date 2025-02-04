@@ -46,6 +46,9 @@
             cmdGoPositionAsync = new Button();
             cmdReference = new Button();
             lblErrorString = new Label();
+            txbCustomCommand = new TextBox();
+            cmdCustomCommand = new Button();
+            lblCustomCommand = new Label();
             SuspendLayout();
             // 
             // txbIP
@@ -89,7 +92,7 @@
             txbReceive.Multiline = true;
             txbReceive.Name = "txbReceive";
             txbReceive.ScrollBars = ScrollBars.Vertical;
-            txbReceive.Size = new Size(275, 338);
+            txbReceive.Size = new Size(275, 373);
             txbReceive.TabIndex = 4;
             // 
             // cmdDisconnect
@@ -134,7 +137,7 @@
             // 
             // txbGoPosition
             // 
-            txbGoPosition.Location = new Point(294, 234);
+            txbGoPosition.Location = new Point(294, 199);
             txbGoPosition.Name = "txbGoPosition";
             txbGoPosition.Size = new Size(129, 27);
             txbGoPosition.TabIndex = 9;
@@ -143,7 +146,7 @@
             // 
             // cmdGoPosition
             // 
-            cmdGoPosition.Location = new Point(436, 233);
+            cmdGoPosition.Location = new Point(436, 198);
             cmdGoPosition.Name = "cmdGoPosition";
             cmdGoPosition.Size = new Size(137, 29);
             cmdGoPosition.TabIndex = 10;
@@ -155,7 +158,7 @@
             // 
             lblPosition.AutoSize = true;
             lblPosition.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblPosition.Location = new Point(294, 337);
+            lblPosition.Location = new Point(293, 273);
             lblPosition.Name = "lblPosition";
             lblPosition.Size = new Size(129, 38);
             lblPosition.TabIndex = 11;
@@ -179,7 +182,7 @@
             // 
             // cmdGoPositionAsync
             // 
-            cmdGoPositionAsync.Location = new Point(436, 268);
+            cmdGoPositionAsync.Location = new Point(436, 233);
             cmdGoPositionAsync.Name = "cmdGoPositionAsync";
             cmdGoPositionAsync.Size = new Size(137, 29);
             cmdGoPositionAsync.TabIndex = 13;
@@ -206,11 +209,42 @@
             lblErrorString.TabIndex = 15;
             lblErrorString.Text = "label1";
             // 
+            // txbCustomCommand
+            // 
+            txbCustomCommand.Location = new Point(293, 323);
+            txbCustomCommand.Name = "txbCustomCommand";
+            txbCustomCommand.Size = new Size(129, 27);
+            txbCustomCommand.TabIndex = 16;
+            txbCustomCommand.Text = "VER";
+            txbCustomCommand.TextAlign = HorizontalAlignment.Right;
+            // 
+            // cmdCustomCommand
+            // 
+            cmdCustomCommand.Location = new Point(436, 322);
+            cmdCustomCommand.Name = "cmdCustomCommand";
+            cmdCustomCommand.Size = new Size(137, 29);
+            cmdCustomCommand.TabIndex = 17;
+            cmdCustomCommand.Text = "Send Command";
+            cmdCustomCommand.UseVisualStyleBackColor = true;
+            cmdCustomCommand.Click += cmdCustomCommand_Click;
+            // 
+            // lblCustomCommand
+            // 
+            lblCustomCommand.AutoSize = true;
+            lblCustomCommand.Location = new Point(293, 353);
+            lblCustomCommand.Name = "lblCustomCommand";
+            lblCustomCommand.Size = new Size(50, 20);
+            lblCustomCommand.TabIndex = 18;
+            lblCustomCommand.Text = "label1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(790, 448);
+            ClientSize = new Size(767, 480);
+            Controls.Add(lblCustomCommand);
+            Controls.Add(cmdCustomCommand);
+            Controls.Add(txbCustomCommand);
             Controls.Add(lblErrorString);
             Controls.Add(cmdReference);
             Controls.Add(cmdGoPositionAsync);
@@ -252,5 +286,8 @@
         private Button cmdGoPositionAsync;
         private Button cmdReference;
         private Label lblErrorString;
+        private TextBox txbCustomCommand;
+        private Button cmdCustomCommand;
+        private Label lblCustomCommand;
     }
 }

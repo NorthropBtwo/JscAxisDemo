@@ -150,5 +150,10 @@ namespace JscAxisDemoWinForms
             }
             cmdReference.Enabled = true;
         }
+
+        private void cmdCustomCommand_Click(object sender, EventArgs e)
+        {
+            lblCustomCommand.Text = axis?.SendCommand(txbCustomCommand.Text);
+        }
     }
 }

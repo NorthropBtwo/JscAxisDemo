@@ -163,30 +163,30 @@ namespace JscAxisDemoWinForms
 
         public int TellPosition(CancellationToken token = new CancellationToken())
         {
-            BlockingCollection<String> queue = new();
-            OnReceive += queue.Add;
-            Send("TP");
-            string answer;
-            do
-            {
-                answer = queue.Take(token);
-            } while (!answer.StartsWith("TP"));
-            OnReceive -= queue.Add;
-            return int.Parse(answer.Split('\n')[1]);
+            return int.Parse(SendCommand("TP", token));
         }
 
         public string TellErrorString(CancellationToken token = new CancellationToken())
         {
+            return SendCommand("TES", token);
+        }
+
+        public string SendCommand(string command, CancellationToken token = new CancellationToken())
+        {
             BlockingCollection<String> queue = new();
             OnReceive += queue.Add;
-            Send("TES");
+            Send(command);
             string answer;
+            string firstLine;
+            int lineEndIdx;
             do
             {
                 answer = queue.Take(token);
-            } while (!answer.StartsWith("TES"));
+                lineEndIdx = answer.IndexOf('\n');
+                firstLine = lineEndIdx >= 0 ? answer.Substring(0, lineEndIdx).Trim('\r') : answer;
+            } while (firstLine != command);
             OnReceive -= queue.Add;
-            return answer.Split('\n')[1].Trim('\r');
+            return lineEndIdx >= 0 ? answer.Substring(lineEndIdx, answer.Length - lineEndIdx).Trim('\n', '\r') : "";
         }
 
         public void Send(string message)
