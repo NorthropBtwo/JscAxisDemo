@@ -44,6 +44,8 @@
             timTellPosition = new System.Windows.Forms.Timer(components);
             cmdStopMotion = new Button();
             cmdGoPositionAsync = new Button();
+            cmdReference = new Button();
+            lblErrorString = new Label();
             SuspendLayout();
             // 
             // txbIP
@@ -52,7 +54,7 @@
             txbIP.Name = "txbIP";
             txbIP.Size = new Size(139, 27);
             txbIP.TabIndex = 0;
-            txbIP.Text = "192.168.32.100";
+            txbIP.Text = "192.168.0.66";
             // 
             // cmdConnect
             // 
@@ -114,11 +116,11 @@
             // 
             lblState.AutoSize = true;
             lblState.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblState.Location = new Point(475, 21);
+            lblState.Location = new Point(481, 9);
             lblState.Name = "lblState";
-            lblState.Size = new Size(92, 38);
+            lblState.Size = new Size(185, 38);
             lblState.TabIndex = 7;
-            lblState.Text = "State: ";
+            lblState.Text = "Disconnected";
             // 
             // cmdPowerQuit
             // 
@@ -132,7 +134,7 @@
             // 
             // txbGoPosition
             // 
-            txbGoPosition.Location = new Point(294, 185);
+            txbGoPosition.Location = new Point(294, 234);
             txbGoPosition.Name = "txbGoPosition";
             txbGoPosition.Size = new Size(129, 27);
             txbGoPosition.TabIndex = 9;
@@ -141,7 +143,7 @@
             // 
             // cmdGoPosition
             // 
-            cmdGoPosition.Location = new Point(436, 184);
+            cmdGoPosition.Location = new Point(436, 233);
             cmdGoPosition.Name = "cmdGoPosition";
             cmdGoPosition.Size = new Size(137, 29);
             cmdGoPosition.TabIndex = 10;
@@ -153,7 +155,7 @@
             // 
             lblPosition.AutoSize = true;
             lblPosition.Font = new Font("Segoe UI", 16.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lblPosition.Location = new Point(294, 288);
+            lblPosition.Location = new Point(294, 337);
             lblPosition.Name = "lblPosition";
             lblPosition.Size = new Size(129, 38);
             lblPosition.TabIndex = 11;
@@ -177,7 +179,7 @@
             // 
             // cmdGoPositionAsync
             // 
-            cmdGoPositionAsync.Location = new Point(436, 219);
+            cmdGoPositionAsync.Location = new Point(436, 268);
             cmdGoPositionAsync.Name = "cmdGoPositionAsync";
             cmdGoPositionAsync.Size = new Size(137, 29);
             cmdGoPositionAsync.TabIndex = 13;
@@ -185,11 +187,32 @@
             cmdGoPositionAsync.UseVisualStyleBackColor = true;
             cmdGoPositionAsync.Click += cmdGoPositionAsync_Click;
             // 
+            // cmdReference
+            // 
+            cmdReference.Location = new Point(294, 164);
+            cmdReference.Name = "cmdReference";
+            cmdReference.Size = new Size(280, 29);
+            cmdReference.TabIndex = 14;
+            cmdReference.Text = "Reference";
+            cmdReference.UseVisualStyleBackColor = true;
+            cmdReference.Click += cmdReference_Click;
+            // 
+            // lblErrorString
+            // 
+            lblErrorString.AutoSize = true;
+            lblErrorString.Location = new Point(471, 54);
+            lblErrorString.Name = "lblErrorString";
+            lblErrorString.Size = new Size(50, 20);
+            lblErrorString.TabIndex = 15;
+            lblErrorString.Text = "label1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(750, 448);
+            ClientSize = new Size(790, 448);
+            Controls.Add(lblErrorString);
+            Controls.Add(cmdReference);
             Controls.Add(cmdGoPositionAsync);
             Controls.Add(cmdStopMotion);
             Controls.Add(lblPosition);
@@ -227,5 +250,7 @@
         private System.Windows.Forms.Timer timTellPosition;
         private Button cmdStopMotion;
         private Button cmdGoPositionAsync;
+        private Button cmdReference;
+        private Label lblErrorString;
     }
 }

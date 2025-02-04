@@ -19,7 +19,7 @@ namespace JscAxisDemoWinForms
             {
                 JScAxis axis = new JScAxis();
                 axis.OnReceive += Received;
-                axis.OnStateChanged += StateChaned;
+                axis.OnStateChanged += StateChanged;
                 axis.Connect(IPAddress.Parse(txbIP.Text));
                 this.axis = axis;
                 UpdateConnectionButtons();
@@ -54,15 +54,23 @@ namespace JscAxisDemoWinForms
             }
         }
 
-        private void StateChaned(JScAxis.State state)
+        private async void StateChanged(JScAxis.State state)
         {
             if (this.InvokeRequired)
             {
-                BeginInvoke(new Action(() => { StateChaned(state); }));
+                BeginInvoke(new Action(() => { StateChanged(state); }));
             }
             else
             {
                 lblState.Text = "State: " + state.ToString();
+                if (state == JScAxis.State.ERROR)
+                {
+                    lblErrorString.Text = await Task.Run(() => axis?.TellErrorString());
+                }
+                else
+                {
+                    lblErrorString.Text = "";
+                }
             }
         }
 
@@ -71,10 +79,11 @@ namespace JscAxisDemoWinForms
             if (axis != null)
             {
                 axis.OnReceive -= Received;
-                axis.OnStateChanged -= StateChaned;
+                axis.OnStateChanged -= StateChanged;
                 axis?.Disconnect();
                 axis = null;
                 UpdateConnectionButtons();
+                lblState.Text = "Disconnected";
             }
         }
 
@@ -86,6 +95,7 @@ namespace JscAxisDemoWinForms
         private void Form1_Load(object sender, EventArgs e)
         {
             UpdateConnectionButtons();
+            lblErrorString.Text = "";
         }
 
         private void cmdPowerQuit_Click(object sender, EventArgs e)
@@ -121,10 +131,24 @@ namespace JscAxisDemoWinForms
             {
                 cmdGoPosition.Enabled = false;
                 cmdGoPositionAsync.Enabled = false;
-                await(axis?.GoPositionAsync(position) ?? Task.CompletedTask);
+                await (axis?.GoPositionAsync(position) ?? Task.CompletedTask);
                 cmdGoPosition.Enabled = true;
                 cmdGoPositionAsync.Enabled = true;
             }
+        }
+
+        private async void cmdReference_Click(object sender, EventArgs e)
+        {
+            cmdReference.Enabled = false;
+            try
+            {
+                await Task.Run(() => axis?.Reference());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during Reference: {ex.Message}");
+            }
+            cmdReference.Enabled = true;
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Threading.Tasks.Dataflow;
 using System.Collections.Concurrent;
 using System.Collections;
 using System.Windows.Forms;
+using System.Net.Http.Headers;
 
 namespace JscAxisDemoWinForms
 {
@@ -21,12 +22,15 @@ namespace JscAxisDemoWinForms
             POWER_ON = 1,
             MOVING = 2,
             ERROR = 9,
+            REFERENCED = 10,
         }
 
         TcpClient? client = null;
         Task? receiveTask = null;
         object clientLock = new object();
         State currentState = State.POWER_OFF;
+        bool hasError = false;
+        bool isPowered = false;
 
         public event Action<String>? OnReceive;
         public event Action<State>? OnStateChanged;
@@ -71,6 +75,50 @@ namespace JscAxisDemoWinForms
             }
         }
 
+        public void Reference(CancellationToken token = new CancellationToken())
+        {
+            State? newState = null;
+            if (currentState != State.MOVING)
+            {
+                BlockingCollection<State> queue = new BlockingCollection<State>();
+                State oldState = currentState;
+                OnStateChanged += queue.Add;
+                Send("REF");
+                try
+                {
+                    CancellationToken currentToken = token;
+                    bool axisWasMovingOnce = false;
+                    while ((newState = queue.Take(currentToken)) != State.REFERENCED)
+                    {
+                        if ((newState == State.POWER_OFF && oldState != State.ERROR) || newState == State.ERROR) //State.POWER_OFF is only ok if we recover from an Error
+                        {
+                            throw new Exception("error during reference");
+                        }
+                        else if (newState == State.POWER_ON && axisWasMovingOnce) //the axis moved and stopped now
+                        {
+                            currentToken = new CancellationTokenSource(500).Token; //after axis stopped, Reference event should follow soon. Otherwise, it was no succesful
+                        }
+                        else if (newState == State.MOVING)
+                        {
+                            axisWasMovingOnce = true;
+                            currentToken = token;
+                        }
+                        else
+                        {
+                            currentToken = token;
+                        }
+
+                        oldState = (State)newState;
+                    }
+                }
+                catch (OperationCanceledException) { throw; }
+                finally
+                {
+                    OnStateChanged -= queue.Add;
+                }
+            }
+        }
+
         public void StopMoition(CancellationToken token = new CancellationToken())
         {
             if (currentState == State.MOVING)
@@ -86,23 +134,31 @@ namespace JscAxisDemoWinForms
 
         public void GoPosition(int position, CancellationToken token = new CancellationToken())
         {
-            BlockingCollection<State> queue = new BlockingCollection<State>();
-            OnStateChanged += queue.Add;
-            Send("G" + position);
-            while (queue.Take(token) != State.MOVING); //wait until moving
-            while (queue.Take(token) == State.MOVING); //wait until not moving
-            OnStateChanged -= queue.Add;
+            if (!hasError || isPowered) /* do not execute if error is active except softlimit error is active */
+            {
+                BlockingCollection<State> queue = new BlockingCollection<State>();
+                State newState;
+                OnStateChanged += queue.Add;
+                Send("G" + position);
+                while ((newState = queue.Take(token)) != State.MOVING && newState != State.ERROR) ; //wait until moving or error
+                while (newState != State.ERROR && (newState = queue.Take(token)) == State.MOVING) ;  //wait until not moving or error
+                OnStateChanged -= queue.Add;
+            }
         }
 
         public async Task GoPositionAsync(int position, CancellationToken token = new CancellationToken())
         {
-            BufferBlock<State> queue = new();
-            Action<State> action = (s) => queue.Post(s);
-            OnStateChanged += action;
-            Send("G" + position);
-            while (await queue.ReceiveAsync(token) != State.MOVING); //wait until moving
-            while (await queue.ReceiveAsync(token) == State.MOVING); //wait until not moving
-            OnStateChanged -= action;
+            if (!hasError || isPowered) /* do not execute if error is active except softlimit error is active */
+            {
+                BufferBlock<State> queue = new();
+                State newState;
+                Action<State> action = (s) => queue.Post(s);
+                OnStateChanged += action;
+                Send("G" + position);
+                while ((newState = await queue.ReceiveAsync(token)) != State.MOVING && newState != State.ERROR) ; //wait until moving or error
+                while (newState != State.ERROR && (newState = await queue.ReceiveAsync(token)) == State.MOVING) ;  //wait until not moving or error
+                OnStateChanged -= action;
+            }
         }
 
         public int TellPosition(CancellationToken token = new CancellationToken())
@@ -117,6 +173,20 @@ namespace JscAxisDemoWinForms
             } while (!answer.StartsWith("TP"));
             OnReceive -= queue.Add;
             return int.Parse(answer.Split('\n')[1]);
+        }
+
+        public string TellErrorString(CancellationToken token = new CancellationToken())
+        {
+            BlockingCollection<String> queue = new();
+            OnReceive += queue.Add;
+            Send("TES");
+            string answer;
+            do
+            {
+                answer = queue.Take(token);
+            } while (!answer.StartsWith("TES"));
+            OnReceive -= queue.Add;
+            return answer.Split('\n')[1].Trim('\r');
         }
 
         public void Send(string message)
@@ -154,27 +224,40 @@ namespace JscAxisDemoWinForms
                     {
                         strBuffer += Encoding.UTF8.GetString(buffer, 0, readLenght);
                         string[] recievedParts = strBuffer.Split('>');
-                        for (int i = 0; i < recievedParts.Length-1; i++)
+                        for (int i = 0; i < recievedParts.Length - 1; i++)
                         {
                             string received = recievedParts[i].Trim('\n', '\r');
                             OnReceive?.Invoke(received);
                             if (received == "@S0")
                             {
                                 currentState = State.POWER_OFF;
+                                hasError = false;
+                                isPowered = false;
+                                OnStateChanged?.Invoke(currentState);
                             }
                             else if (received == "@S1")
                             {
                                 currentState = State.POWER_ON;
+                                hasError = false;
+                                isPowered = true;
+                                OnStateChanged?.Invoke(currentState);
                             }
                             else if (received == "@S2")
                             {
                                 currentState = State.MOVING;
+                                hasError = false;
+                                OnStateChanged?.Invoke(currentState);
                             }
                             else if (received == "@S9")
                             {
                                 currentState = State.ERROR;
+                                hasError = true;
+                                OnStateChanged?.Invoke(currentState);
                             }
-                            OnStateChanged?.Invoke(currentState);
+                            else if (received == "@H")
+                            {
+                                OnStateChanged?.Invoke(State.REFERENCED);
+                            }
                         }
                         strBuffer = recievedParts[recievedParts.Length - 1];
                     }
