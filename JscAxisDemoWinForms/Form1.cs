@@ -54,7 +54,7 @@ namespace JscAxisDemoWinForms
 
         private void Received(string message)
         {
-            if (message.StartsWith("TP"))
+            if (message.StartsWith("TP")) // ignore TellPosition messages as thex would flood the textbox
             {
                 return;
             }
@@ -77,7 +77,6 @@ namespace JscAxisDemoWinForms
                 if (state == JScAxis.State.DISCONNECTED)
                 {
                     ctsDisconnected.Cancel();
-                    axis = null; // axis will close itself if State.DISCONNECTED is reached
                 }
             }
             else
@@ -91,8 +90,15 @@ namespace JscAxisDemoWinForms
                     }
                     catch (OperationCanceledException) { }
                 }
-                else if (state == JScAxis.State.DISCONNECTED)
+                else if (state == JScAxis.State.DISCONNECTED) //connection was lost. This will not be called if the user clicks disconnect because this function is removed from the event before disconnecting
                 {
+                    if (axis != null)
+                    {
+                        axis.OnReceive -= Received;
+                        axis.OnStateChanged -= StateChanged;
+                        axis?.Disconnect();
+                        axis = null;
+                    }
                     lblErrorString.Text = "Connection lost";
                     UpdateButtonEnableStates();
                 }

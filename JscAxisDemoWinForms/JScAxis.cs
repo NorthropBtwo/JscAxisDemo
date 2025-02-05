@@ -210,6 +210,9 @@ namespace JscAxisDemoWinForms
                     {
                         throw new OperationCanceledException(ex.ToString()); //if client was disconnected, throw an exception to cancel the operation
                     }
+                } else
+                {
+                    throw new OperationCanceledException("Client is not connected");
                 }
             }
         }
