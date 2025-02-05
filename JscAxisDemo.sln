@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JscAxisLib", "JscAxisLib\Js
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JscAxisDemoRepeatReverse", "JscAxisDemoRepeatReverse\JscAxisDemoRepeatReverse.csproj", "{D7C13EAD-8E69-4000-A941-007073F93A6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JscAxisDemoForceteqBasic", "JscAxisDemoForceteqBasic\JscAxisDemoForceteqBasic.csproj", "{D6149C19-AAB3-4DFF-A60B-086D5007A27C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D7C13EAD-8E69-4000-A941-007073F93A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7C13EAD-8E69-4000-A941-007073F93A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7C13EAD-8E69-4000-A941-007073F93A6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6149C19-AAB3-4DFF-A60B-086D5007A27C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6149C19-AAB3-4DFF-A60B-086D5007A27C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6149C19-AAB3-4DFF-A60B-086D5007A27C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6149C19-AAB3-4DFF-A60B-086D5007A27C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

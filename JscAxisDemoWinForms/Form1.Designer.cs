@@ -49,6 +49,15 @@
             txbCustomCommand = new TextBox();
             cmdCustomCommand = new Button();
             lblCustomCommand = new Label();
+            cmdForceCalibration = new Button();
+            label1 = new Label();
+            label2 = new Label();
+            txbForceCalibrationFrom = new TextBox();
+            txbForceCalibrationTo = new TextBox();
+            cmdClearForceCalibration = new Button();
+            txbLimitIForce = new TextBox();
+            cmdLimitIForce = new Button();
+            label3 = new Label();
             SuspendLayout();
             // 
             // txbIP
@@ -237,11 +246,104 @@
             lblCustomCommand.TabIndex = 18;
             lblCustomCommand.Text = "label1";
             // 
+            // cmdForceCalibration
+            // 
+            cmdForceCalibration.Location = new Point(579, 129);
+            cmdForceCalibration.Name = "cmdForceCalibration";
+            cmdForceCalibration.Size = new Size(280, 29);
+            cmdForceCalibration.TabIndex = 19;
+            cmdForceCalibration.Text = "Start Force Calibration";
+            cmdForceCalibration.UseVisualStyleBackColor = true;
+            cmdForceCalibration.Click += cmdForceCalibration_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(579, 98);
+            label1.Name = "label1";
+            label1.Size = new Size(46, 20);
+            label1.TabIndex = 20;
+            label1.Text = "From:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(746, 98);
+            label2.Name = "label2";
+            label2.Size = new Size(28, 20);
+            label2.TabIndex = 21;
+            label2.Text = "To:";
+            // 
+            // txbForceCalibrationFrom
+            // 
+            txbForceCalibrationFrom.Location = new Point(631, 95);
+            txbForceCalibrationFrom.Name = "txbForceCalibrationFrom";
+            txbForceCalibrationFrom.Size = new Size(84, 27);
+            txbForceCalibrationFrom.TabIndex = 22;
+            txbForceCalibrationFrom.Text = "0";
+            txbForceCalibrationFrom.TextAlign = HorizontalAlignment.Right;
+            // 
+            // txbForceCalibrationTo
+            // 
+            txbForceCalibrationTo.Location = new Point(775, 95);
+            txbForceCalibrationTo.Name = "txbForceCalibrationTo";
+            txbForceCalibrationTo.Size = new Size(84, 27);
+            txbForceCalibrationTo.TabIndex = 23;
+            txbForceCalibrationTo.Text = "30000";
+            txbForceCalibrationTo.TextAlign = HorizontalAlignment.Right;
+            // 
+            // cmdClearForceCalibration
+            // 
+            cmdClearForceCalibration.Location = new Point(579, 164);
+            cmdClearForceCalibration.Name = "cmdClearForceCalibration";
+            cmdClearForceCalibration.Size = new Size(280, 29);
+            cmdClearForceCalibration.TabIndex = 24;
+            cmdClearForceCalibration.Text = "Clear Force Calibration";
+            cmdClearForceCalibration.UseVisualStyleBackColor = true;
+            cmdClearForceCalibration.Click += cmdClearForceCalibration_Click;
+            // 
+            // txbLimitIForce
+            // 
+            txbLimitIForce.Location = new Point(579, 199);
+            txbLimitIForce.Name = "txbLimitIForce";
+            txbLimitIForce.Size = new Size(87, 27);
+            txbLimitIForce.TabIndex = 25;
+            txbLimitIForce.Text = "0";
+            txbLimitIForce.TextAlign = HorizontalAlignment.Right;
+            // 
+            // cmdLimitIForce
+            // 
+            cmdLimitIForce.Location = new Point(738, 198);
+            cmdLimitIForce.Name = "cmdLimitIForce";
+            cmdLimitIForce.Size = new Size(121, 29);
+            cmdLimitIForce.TabIndex = 26;
+            cmdLimitIForce.Text = "Limit I Force";
+            cmdLimitIForce.UseVisualStyleBackColor = true;
+            cmdLimitIForce.Click += cmdLimitIForce_Click;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(668, 202);
+            label3.Name = "label3";
+            label3.Size = new Size(64, 20);
+            label3.TabIndex = 27;
+            label3.Text = "[*10mA]";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 480);
+            ClientSize = new Size(884, 480);
+            Controls.Add(label3);
+            Controls.Add(cmdLimitIForce);
+            Controls.Add(txbLimitIForce);
+            Controls.Add(cmdClearForceCalibration);
+            Controls.Add(txbForceCalibrationTo);
+            Controls.Add(txbForceCalibrationFrom);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(cmdForceCalibration);
             Controls.Add(lblCustomCommand);
             Controls.Add(cmdCustomCommand);
             Controls.Add(txbCustomCommand);
@@ -289,5 +391,14 @@
         private TextBox txbCustomCommand;
         private Button cmdCustomCommand;
         private Label lblCustomCommand;
+        private Button cmdForceCalibration;
+        private Label label1;
+        private Label label2;
+        private TextBox txbForceCalibrationFrom;
+        private TextBox txbForceCalibrationTo;
+        private Button cmdClearForceCalibration;
+        private TextBox txbLimitIForce;
+        private Button cmdLimitIForce;
+        private Label label3;
     }
 }

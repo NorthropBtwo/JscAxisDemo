@@ -41,6 +41,9 @@ namespace JscAxisDemoWinForms
             cmdGoPositionAsync.Enabled = connected;
             cmdReference.Enabled = connected;
             cmdCustomCommand.Enabled = connected;
+            cmdForceCalibration.Enabled = connected;
+            cmdClearForceCalibration.Enabled = connected;
+            cmdLimitIForce.Enabled = connected;
         }
 
         private void cmdSend_Click(object sender, EventArgs e)
@@ -149,10 +152,10 @@ namespace JscAxisDemoWinForms
 
         private void timTellPosition_Tick(object sender, EventArgs e)
         {
-            try 
-            { 
+            try
+            {
                 lblPosition.Text = "Position: " + axis?.TellPosition(ctsDisconnected.Token);
-            } 
+            }
             catch (OperationCanceledException) { }
         }
 
@@ -218,6 +221,51 @@ namespace JscAxisDemoWinForms
                 lblCustomCommand.Text = axis?.SendCommand(txbCustomCommand.Text, ctsDisconnected.Token);
             }
             catch (OperationCanceledException) { }
+        }
+
+        private async void cmdForceCalibration_Click(object sender, EventArgs e)
+        {
+            cmdForceCalibration.Enabled = false;
+            if (int.TryParse(txbForceCalibrationFrom.Text, out int startPosition) && int.TryParse(txbForceCalibrationTo.Text, out int endPosition))
+            {
+                try
+                {
+                    await Task.Run(() => axis?.ForceCalibration(startPosition, endPosition, ctsDisconnected.Token));
+                }
+                catch (OperationCanceledException) { }
+            }
+            else
+            {
+                MessageBox.Show("Invalid input");
+            }
+            cmdForceCalibration.Enabled = true;
+        }
+
+        private async void cmdClearForceCalibration_Click(object sender, EventArgs e)
+        {
+            cmdClearForceCalibration.Enabled = false;
+            try
+            {
+                await Task.Run(() => axis?.ForceCalibration(0, 0, ctsDisconnected.Token));
+            }
+            catch (OperationCanceledException) { }
+            cmdClearForceCalibration.Enabled = true;
+        }
+
+        private void cmdLimitIForce_Click(object sender, EventArgs e)
+        {
+            if (int.TryParse(txbLimitIForce.Text, out int limitIForceValue))
+            {
+                try
+                {
+                    axis?.SendCommand("LIF" + limitIForceValue, ctsDisconnected.Token);
+                }
+                catch (OperationCanceledException) { }
+            }
+            else
+            {
+                MessageBox.Show("Invalid input");
+            }
         }
     }
 }

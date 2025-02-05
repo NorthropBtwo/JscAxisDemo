@@ -166,6 +166,11 @@ namespace JscAxisLib
             return int.Parse(SendCommand("TP", token));
         }
 
+        public int TellPSR(CancellationToken token = new CancellationToken())
+        {
+            return int.Parse(SendCommand("TPSR", token), System.Globalization.NumberStyles.HexNumber);
+        }
+
         public string TellErrorString(CancellationToken token = new CancellationToken())
         {
             return SendCommand("TES", token);
@@ -210,6 +215,31 @@ namespace JscAxisLib
                 {
                     throw new OperationCanceledException("Client is not connected");
                 }
+            }
+        }
+
+        public void ForceCalibration(int startPosition, int endPosition, CancellationToken token = new CancellationToken())
+        {
+            if (!hasError || isPowered) /* do not execute if error is active except softlimit error is active */
+            {
+                if (startPosition > endPosition)
+                {
+                    throw new ArgumentException("startPosition must be smaller than endPosition");
+                }
+                
+                int calibrationWay = endPosition - startPosition;
+                if (calibrationWay > 0)
+                {
+                    this.GoPosition(startPosition, token);
+                }
+                SendCommand("FC" + calibrationWay);
+
+                int psr;
+                do
+                {
+                    Thread.Sleep(100);
+                    psr = TellPSR(token);
+                } while ((psr & 0x4000) == 0x4000);
             }
         }
 
