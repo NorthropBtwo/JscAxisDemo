@@ -4,15 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using System.Threading.Channels;
 using System.Threading.Tasks.Dataflow;
 using System.Collections.Concurrent;
-using System.Collections;
-using System.Windows.Forms;
-using System.Net.Http.Headers;
 
-namespace JscAxisDemoWinForms
+namespace JscAxisLib
 {
     public class JScAxis : IDisposable
     {
@@ -49,6 +44,7 @@ namespace JscAxisDemoWinForms
                 Send("EVT1");
                 while (!queue.Take().Contains("EVT1")) ;
                 OnReceive -= queue.Add;
+                Thread.Sleep(300); //EVT1 will answer with state events. We do not know how many events will be send. Wait a little bit to get all events.
             }
         }
 

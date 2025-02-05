@@ -1,10 +1,10 @@
 using System.Net;
+using JscAxisLib;
 
 namespace JscAxisDemoWinForms
 {
     public partial class Form1 : Form
     {
-
 
         JScAxis? axis;
         CancellationTokenSource ctsDisconnected = new CancellationTokenSource();

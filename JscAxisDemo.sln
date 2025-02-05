@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JscAxisDemoWinForms", "JscAxisDemoWinForms\JscAxisDemoWinForms.csproj", "{150BCDB3-D62F-4053-BC96-30B6FBDFCEF2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JscAxisLib", "JscAxisLib\JscAxisLib.csproj", "{58AF56A1-1872-4A13-BAAE-22809A66573A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JscAxisDemoRepeatReverse", "JscAxisDemoRepeatReverse\JscAxisDemoRepeatReverse.csproj", "{D7C13EAD-8E69-4000-A941-007073F93A6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{150BCDB3-D62F-4053-BC96-30B6FBDFCEF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{150BCDB3-D62F-4053-BC96-30B6FBDFCEF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{150BCDB3-D62F-4053-BC96-30B6FBDFCEF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58AF56A1-1872-4A13-BAAE-22809A66573A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58AF56A1-1872-4A13-BAAE-22809A66573A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58AF56A1-1872-4A13-BAAE-22809A66573A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58AF56A1-1872-4A13-BAAE-22809A66573A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7C13EAD-8E69-4000-A941-007073F93A6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7C13EAD-8E69-4000-A941-007073F93A6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7C13EAD-8E69-4000-A941-007073F93A6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7C13EAD-8E69-4000-A941-007073F93A6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
