@@ -241,7 +241,7 @@
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(767, 480);
+            ClientSize = new Size(800, 480);
             Controls.Add(lblCustomCommand);
             Controls.Add(cmdCustomCommand);
             Controls.Add(txbCustomCommand);

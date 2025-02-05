@@ -23,6 +23,7 @@ namespace JscAxisDemoWinForms
             MOVING = 2,
             ERROR = 9,
             REFERENCED = 10,
+            DISCONNECTED = 99,
         }
 
         TcpClient? client = null;
@@ -90,9 +91,9 @@ namespace JscAxisDemoWinForms
                     bool axisWasMovingOnce = false;
                     while ((newState = queue.Take(currentToken)) != State.REFERENCED)
                     {
-                        if ((newState == State.POWER_OFF && oldState != State.ERROR) || newState == State.ERROR) //State.POWER_OFF is only ok if we recover from an Error
+                        if ((newState == State.POWER_OFF && oldState != State.ERROR) || newState == State.ERROR || newState == State.DISCONNECTED) //State.POWER_OFF is only ok if we recover from an Error
                         {
-                            throw new Exception("error during reference");
+                            throw new OperationCanceledException(token); //The Operation will never finished in error or power off state. Throw an exception to cancel the operation
                         }
                         else if (newState == State.POWER_ON && axisWasMovingOnce) //the axis moved and stopped now
                         {
@@ -111,7 +112,10 @@ namespace JscAxisDemoWinForms
                         oldState = (State)newState;
                     }
                 }
-                catch (OperationCanceledException) { throw; }
+                catch (OperationCanceledException) 
+                { 
+                    throw; 
+                }
                 finally
                 {
                     OnStateChanged -= queue.Add;
@@ -191,22 +195,30 @@ namespace JscAxisDemoWinForms
 
         public void Send(string message)
         {
+            var buffer = Encoding.UTF8.GetBytes(message + Environment.NewLine);
+
             lock (clientLock)
             {
-                if (client != null)
+                if (client != null && client.Connected)
                 {
-                    var stream = client.GetStream();
-                    var buffer = Encoding.UTF8.GetBytes(message + Environment.NewLine);
-                    stream.Write(buffer, 0, buffer.Length);
+                    try
+                    {
+                        var stream = client.GetStream();
+                        stream.Write(buffer, 0, buffer.Length);
+                    }
+                    catch(Exception ex)
+                    {
+                        throw new OperationCanceledException(ex.ToString()); //if client was disconnected, throw an exception to cancel the operation
+                    }
                 }
             }
         }
 
         private void Receive()
         {
-            if (client != null)
+            var stream = client?.GetStream();
+            if (stream != null)
             {
-                var stream = client.GetStream();
                 byte[] buffer = new byte[4096];
                 string strBuffer = "";
                 int readLenght;
@@ -263,20 +275,25 @@ namespace JscAxisDemoWinForms
                     }
                 } while (readLenght > 0);
             }
+
+            CloseCLient();
+            OnStateChanged?.Invoke(State.DISCONNECTED);
+        }
+
+        private void CloseCLient()
+        {
+            lock (clientLock)
+            {
+                client?.Dispose();
+                client = null;
+            }
         }
 
         public void Disconnect()
         {
-            lock (clientLock)
-            {
-                if (client != null)
-                {
-                    client.Dispose();
-                    receiveTask?.Wait();
-                    receiveTask = null;
-                    client = null;
-                }
-            }
+            CloseCLient();
+            receiveTask?.Wait();
+            receiveTask = null;
         }
 
         public void Dispose()

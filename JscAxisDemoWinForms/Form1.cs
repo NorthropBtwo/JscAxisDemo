@@ -7,6 +7,7 @@ namespace JscAxisDemoWinForms
 
 
         JScAxis? axis;
+        CancellationTokenSource ctsDisconnected = new CancellationTokenSource();
 
         public Form1()
         {
@@ -18,23 +19,37 @@ namespace JscAxisDemoWinForms
             if (axis == null)
             {
                 JScAxis axis = new JScAxis();
+                ctsDisconnected = new CancellationTokenSource();
                 axis.OnReceive += Received;
                 axis.OnStateChanged += StateChanged;
                 axis.Connect(IPAddress.Parse(txbIP.Text));
                 this.axis = axis;
-                UpdateConnectionButtons();
+                UpdateButtonEnableStates();
             }
         }
 
-        private void UpdateConnectionButtons()
+        private void UpdateButtonEnableStates()
         {
-            cmdConnect.Enabled = (axis == null);
-            cmdDisconnect.Enabled = (axis != null);
+            bool connected = axis != null;
+            cmdConnect.Enabled = !connected;
+            cmdDisconnect.Enabled = connected;
+            cmdSend.Enabled = connected;
+            cmdPwc.Enabled = connected;
+            cmdPowerQuit.Enabled = connected;
+            cmdStopMotion.Enabled = connected;
+            cmdGoPosition.Enabled = connected;
+            cmdGoPositionAsync.Enabled = connected;
+            cmdReference.Enabled = connected;
+            cmdCustomCommand.Enabled = connected;
         }
 
         private void cmdSend_Click(object sender, EventArgs e)
         {
-            axis?.Send(txbSend.Text);
+            try
+            {
+                axis?.Send(txbSend.Text);
+            }
+            catch (OperationCanceledException) { }
         }
 
         private void Received(string message)
@@ -59,13 +74,27 @@ namespace JscAxisDemoWinForms
             if (this.InvokeRequired)
             {
                 BeginInvoke(new Action(() => { StateChanged(state); }));
+                if (state == JScAxis.State.DISCONNECTED)
+                {
+                    ctsDisconnected.Cancel();
+                    axis = null; // axis will close itself if State.DISCONNECTED is reached
+                }
             }
             else
             {
                 lblState.Text = "State: " + state.ToString();
                 if (state == JScAxis.State.ERROR)
                 {
-                    lblErrorString.Text = await Task.Run(() => axis?.TellErrorString());
+                    try
+                    {
+                        lblErrorString.Text = await Task.Run(() => axis?.TellErrorString(ctsDisconnected.Token));
+                    }
+                    catch (OperationCanceledException) { }
+                }
+                else if (state == JScAxis.State.DISCONNECTED)
+                {
+                    lblErrorString.Text = "Connection lost";
+                    UpdateButtonEnableStates();
                 }
                 else
                 {
@@ -82,35 +111,52 @@ namespace JscAxisDemoWinForms
                 axis.OnStateChanged -= StateChanged;
                 axis?.Disconnect();
                 axis = null;
-                UpdateConnectionButtons();
+                UpdateButtonEnableStates();
                 lblState.Text = "Disconnected";
             }
         }
 
         private void cmdPwc_Click(object sender, EventArgs e)
         {
-            axis?.PowerContinuous();
+            try
+            {
+                axis?.PowerContinuous(ctsDisconnected.Token);
+            }
+            catch (OperationCanceledException) { }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            UpdateConnectionButtons();
+            UpdateButtonEnableStates();
             lblErrorString.Text = "";
+            lblCustomCommand.Text = "";
         }
 
         private void cmdPowerQuit_Click(object sender, EventArgs e)
         {
-            axis?.PowerQuit();
+            try
+            {
+                axis?.PowerQuit(ctsDisconnected.Token);
+            }
+            catch (OperationCanceledException) { }
         }
 
         private void timTellPosition_Tick(object sender, EventArgs e)
         {
-            lblPosition.Text = "Position: " + axis?.TellPosition();
+            try 
+            { 
+                lblPosition.Text = "Position: " + axis?.TellPosition(ctsDisconnected.Token);
+            } 
+            catch (OperationCanceledException) { }
         }
 
         private void cmdStopMotion_Click(object sender, EventArgs e)
         {
-            axis?.StopMoition();
+            try
+            {
+                axis?.StopMoition(ctsDisconnected.Token);
+            }
+            catch (OperationCanceledException) { }
         }
 
         private async void cmdGoPosition_Click(object sender, EventArgs e)
@@ -119,7 +165,11 @@ namespace JscAxisDemoWinForms
             {
                 cmdGoPosition.Enabled = false;
                 cmdGoPositionAsync.Enabled = false;
-                await Task.Run(() => axis?.GoPosition(position));
+                try
+                {
+                    await Task.Run(() => axis?.GoPosition(position, ctsDisconnected.Token));
+                }
+                catch (OperationCanceledException) { }
                 cmdGoPosition.Enabled = true;
                 cmdGoPositionAsync.Enabled = true;
             }
@@ -131,7 +181,11 @@ namespace JscAxisDemoWinForms
             {
                 cmdGoPosition.Enabled = false;
                 cmdGoPositionAsync.Enabled = false;
-                await (axis?.GoPositionAsync(position) ?? Task.CompletedTask);
+                try
+                {
+                    await (axis?.GoPositionAsync(position, ctsDisconnected.Token) ?? Task.CompletedTask);
+                }
+                catch (OperationCanceledException) { }
                 cmdGoPosition.Enabled = true;
                 cmdGoPositionAsync.Enabled = true;
             }
@@ -142,9 +196,9 @@ namespace JscAxisDemoWinForms
             cmdReference.Enabled = false;
             try
             {
-                await Task.Run(() => axis?.Reference());
+                await Task.Run(() => axis?.Reference(ctsDisconnected.Token));
             }
-            catch (Exception ex)
+            catch (OperationCanceledException ex)
             {
                 MessageBox.Show($"Error during Reference: {ex.Message}");
             }
@@ -153,7 +207,11 @@ namespace JscAxisDemoWinForms
 
         private void cmdCustomCommand_Click(object sender, EventArgs e)
         {
-            lblCustomCommand.Text = axis?.SendCommand(txbCustomCommand.Text);
+            try
+            {
+                lblCustomCommand.Text = axis?.SendCommand(txbCustomCommand.Text, ctsDisconnected.Token);
+            }
+            catch (OperationCanceledException) { }
         }
     }
 }
