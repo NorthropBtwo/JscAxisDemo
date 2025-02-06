@@ -4,7 +4,6 @@ using System.Net;
 Console.WriteLine("The Axis will move back and forth between 0 and 30'000");
 IPAddress? ipAddress;
 var axis = new JScAxis();
-//axis.OnReceive += (message) => Console.WriteLine(message);
 
 do {
     Console.Write("IP-Address: ");
